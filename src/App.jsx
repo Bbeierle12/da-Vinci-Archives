@@ -35,8 +35,8 @@ function SceneSetup() {
         intensity={0.3}
         color={0xaaccff}
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
         shadow-camera-far={30}
         shadow-camera-left={-15}
         shadow-camera-right={15}
@@ -49,12 +49,28 @@ function SceneSetup() {
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [webglError, setWebglError] = useState(false);
   const hydrate = useDataStore((s) => s.hydrate);
   const seed = useDataStore((s) => s.seed);
   const { isMobile } = useDeviceDetection();
 
   // Calculate optimal DPR for mobile devices
   const dpr = isMobile ? Math.min(window.devicePixelRatio, 1.5) : window.devicePixelRatio;
+
+  // Check WebGL support on mount
+  useEffect(() => {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) {
+        // Delay state update to avoid synchronous setState in effect
+        setTimeout(() => setWebglError(true), 0);
+      }
+    } catch {
+      // Delay state update to avoid synchronous setState in effect
+      setTimeout(() => setWebglError(true), 0);
+    }
+  }, []);
 
   // Hydrate data on mount, seed sample data if empty
   useEffect(() => {
@@ -72,13 +88,29 @@ export default function App() {
       {/* Loading Screen */}
       {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
 
+      {/* WebGL Error Fallback */}
+      {webglError && (
+        <div className="webgl-fallback">
+          <h2>WebGL Not Supported</h2>
+          <p>Your browser doesn't support WebGL, which is required for this 3D experience.</p>
+          <p>Please try using a different browser or updating Safari to the latest version.</p>
+        </div>
+      )}
+
       <Canvas
         dpr={dpr}
         shadows={!isMobile}
         camera={{ fov: 60, near: 0.1, far: 100, position: [0, 5, 12] }}
+        onCreated={({ gl }) => {
+          // Ensure DPR is capped for performance
+          gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        }}
         gl={{
           powerPreference: isMobile ? 'low-power' : 'high-performance',
           antialias: !isMobile,
+          alpha: true,
+          preserveDrawingBuffer: true,
+          failIfMajorPerformanceCaveat: false,
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 0.8,
         }}

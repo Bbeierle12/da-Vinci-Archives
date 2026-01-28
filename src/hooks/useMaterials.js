@@ -47,12 +47,13 @@ export default function useMaterials() {
       side: THREE.DoubleSide,
     }),
 
-    // Glass & liquids
-    glass: new THREE.MeshPhysicalMaterial({
+    // Glass & liquids - Use MeshStandardMaterial for better iOS Safari compatibility
+    glass: new THREE.MeshStandardMaterial({
       color: 0xffffff,
-      transmission: 0.9,
+      transparent: true,
+      opacity: 0.3,
       roughness: 0.1,
-      thickness: 0.5,
+      metalness: 0.1,
     }),
 
     // Candle
