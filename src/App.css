@@ -479,6 +479,11 @@
   min-height: 1.5em;
 }
 
+.orientation-hint {
+  margin-bottom: 1rem;
+  color: #c9a227;
+}
+
 /* Transition Overlay */
 .transition-overlay {
   position: fixed;
@@ -620,4 +625,133 @@
 @keyframes canvasFadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* ===== RESPONSIVE STYLES ===== */
+
+/* Mobile Typography & Layout (max-width: 480px) */
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .ui-overlay {
+    padding: 0.75rem;
+  }
+
+  .loading-title {
+    font-size: 1.5rem;
+  }
+
+  .loading-gear {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1rem;
+  }
+}
+
+/* Responsive Navigation (max-width: 600px) */
+@media (max-width: 600px) {
+  .navigation-ui {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .station-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .nav-btn {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .station-btn {
+    min-width: auto;
+  }
+
+  .station-icon {
+    font-size: 1rem;
+  }
+
+  .station-label {
+    font-size: 0.7rem;
+  }
+
+  .back-btn {
+    width: 100%;
+  }
+}
+
+/* Responsive Station Panel (max-width: 768px) */
+@media (max-width: 768px) {
+  .station-panel {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-height: 50vh;
+    border-radius: 12px 12px 0 0;
+    border: 2px solid #8b7355;
+    border-bottom: none;
+    animation: slideUpFromBottom 0.3s ease;
+  }
+
+  @keyframes slideUpFromBottom {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Disable slide animation for reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .station-panel {
+      animation: none;
+    }
+  }
+
+  .station-panel h2 {
+    font-size: 1.1rem;
+  }
+
+  .station-panel h3 {
+    font-size: 1rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .metric-value {
+    font-size: 1.2rem;
+  }
+
+  .metric-label {
+    font-size: 0.7rem;
+  }
+}
+
+/* Touch-Friendly Targets */
+@media (pointer: coarse) {
+  .nav-btn,
+  .btn-small,
+  .list-item {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .btn-small {
+    padding: 0.5rem 0.75rem;
+  }
 }

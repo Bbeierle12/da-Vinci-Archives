@@ -30,3 +30,19 @@ button:focus {
   outline: 2px solid #c9a227;
   outline-offset: 2px;
 }
+
+/* Handle notch/safe areas on iOS */
+.ui-overlay {
+  padding: max(1.5rem, env(safe-area-inset-top))
+           max(1.5rem, env(safe-area-inset-right))
+           max(1.5rem, env(safe-area-inset-bottom))
+           max(1.5rem, env(safe-area-inset-left));
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
