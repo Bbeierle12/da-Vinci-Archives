@@ -7,8 +7,19 @@ import { useState, useEffect } from 'react';
  * @returns {boolean} isTouchDevice - Whether the device supports touch input
  */
 export function useDeviceDetection() {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  // Initialize state with immediate browser check to avoid flash of incorrect settings
+  const getInitialMobile = () => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
+  };
+
+  const getInitialTouch = () => {
+    if (typeof window === 'undefined') return false;
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  };
+
+  const [isMobile, setIsMobile] = useState(getInitialMobile);
+  const [isTouchDevice, setIsTouchDevice] = useState(getInitialTouch);
 
   useEffect(() => {
     const checkDevice = () => {
