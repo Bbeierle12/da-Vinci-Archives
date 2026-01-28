@@ -8,7 +8,7 @@ function DashboardPanel() {
   const metrics = useDataStore(selectDashboardMetrics);
 
   return (
-    <div className="station-panel dashboard-panel">
+    <div className="station-panel dashboard-panel" role="region" aria-label="Dashboard overview">
       <h2>Workshop Overview</h2>
 
       <div className="metrics-grid">
@@ -31,7 +31,7 @@ function DashboardPanel() {
       </div>
 
       {metrics.lowStockCount > 0 && (
-        <div className="warning-banner">
+        <div className="warning-banner" role="alert">
           ⚠ {metrics.lowStockCount} supplies running low
         </div>
       )}
@@ -63,7 +63,7 @@ function GalleryPanel() {
   };
 
   return (
-    <div className="station-panel gallery-panel">
+    <div className="station-panel gallery-panel" role="region" aria-label="Gallery panel">
       <h2>Gallery</h2>
 
       {selected ? (
@@ -75,7 +75,7 @@ function GalleryPanel() {
             <span className={`status-badge status-${selected.status}`}>
               {selected.status}
             </span>
-            <button onClick={cycleStatus} className="btn-small">
+            <button onClick={cycleStatus} className="btn-small" aria-label="Change painting status">
               Change Status
             </button>
           </div>
@@ -93,6 +93,14 @@ function GalleryPanel() {
                 key={p.id}
                 className={`list-item status-${p.status}`}
                 onClick={() => setSelected(p.id)}
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setSelected(p.id);
+                  }
+                }}
+                aria-label={`Select ${p.title}`}
               >
                 {p.title}
               </div>
@@ -123,7 +131,7 @@ function InventoryPanel() {
   };
 
   return (
-    <div className="station-panel inventory-panel">
+    <div className="station-panel inventory-panel" role="region" aria-label="Inventory panel">
       <h2>Inventory</h2>
 
       {selected ? (
@@ -131,7 +139,7 @@ function InventoryPanel() {
           <h3>{selected.name}</h3>
 
           <div className="quantity-display">
-            <div className="quantity-bar">
+            <div className="quantity-bar" role="progressbar" aria-valuenow={selected.quantity} aria-valuemin={0} aria-valuemax={100}>
               <div
                 className="quantity-fill"
                 style={{
@@ -146,14 +154,14 @@ function InventoryPanel() {
           </div>
 
           <div className="quantity-controls">
-            <button onClick={() => adjustQuantity(-10)} className="btn-small">-10</button>
-            <button onClick={() => adjustQuantity(-1)} className="btn-small">-1</button>
-            <button onClick={() => adjustQuantity(1)} className="btn-small">+1</button>
-            <button onClick={() => adjustQuantity(10)} className="btn-small">+10</button>
+            <button onClick={() => adjustQuantity(-10)} className="btn-small" aria-label="Decrease by 10">-10</button>
+            <button onClick={() => adjustQuantity(-1)} className="btn-small" aria-label="Decrease by 1">-1</button>
+            <button onClick={() => adjustQuantity(1)} className="btn-small" aria-label="Increase by 1">+1</button>
+            <button onClick={() => adjustQuantity(10)} className="btn-small" aria-label="Increase by 10">+10</button>
           </div>
 
           {selected.quantity <= selected.lowThreshold && (
-            <div className="warning-text">⚠ Low stock warning</div>
+            <div className="warning-text" role="alert">⚠ Low stock warning</div>
           )}
 
           <button onClick={() => setSelected(null)} className="btn-close">
@@ -171,6 +179,14 @@ function InventoryPanel() {
                   key={s.id}
                   className="list-item warning"
                   onClick={() => setSelected(s.id)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      setSelected(s.id);
+                    }
+                  }}
+                  aria-label={`Select ${s.name}, ${s.quantity} ${s.unit} remaining`}
                 >
                   {s.name}: {s.quantity} {s.unit}
                 </div>
@@ -200,7 +216,7 @@ function PlansPanel() {
   };
 
   return (
-    <div className="station-panel plans-panel">
+    <div className="station-panel plans-panel" role="region" aria-label="Plans panel">
       <h2>Plans</h2>
 
       {selected ? (
@@ -218,6 +234,7 @@ function PlansPanel() {
                 type="checkbox"
                 checked={selected.completed || false}
                 onChange={toggleComplete}
+                aria-label={`Mark ${selected.title} as ${selected.completed ? 'incomplete' : 'complete'}`}
               />
               <span>Completed</span>
             </label>
@@ -236,6 +253,14 @@ function PlansPanel() {
                 key={p.id}
                 className={`list-item ${p.completed ? 'completed' : ''}`}
                 onClick={() => setSelected(p.id)}
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setSelected(p.id);
+                  }
+                }}
+                aria-label={`Select plan: ${p.title}${p.completed ? ' (completed)' : ''}`}
               >
                 {p.completed && '✓ '}{p.title}
               </div>

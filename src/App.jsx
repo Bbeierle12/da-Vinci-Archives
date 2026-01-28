@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
 
 import { useDataStore } from './stores';
+import { useDeviceDetection } from './hooks';
 import CameraRig from './components/CameraRig';
 import { Environment } from './components/environment';
 import { Dashboard, Gallery, Inventory, Plans } from './components/stations';
@@ -50,6 +51,10 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const hydrate = useDataStore((s) => s.hydrate);
   const seed = useDataStore((s) => s.seed);
+  const { isMobile } = useDeviceDetection();
+
+  // Calculate optimal DPR for mobile devices
+  const dpr = isMobile ? Math.min(window.devicePixelRatio, 1.5) : window.devicePixelRatio;
 
   // Hydrate data on mount, seed sample data if empty
   useEffect(() => {
@@ -68,9 +73,12 @@ export default function App() {
       {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
 
       <Canvas
-        shadows
+        dpr={dpr}
+        shadows={!isMobile}
         camera={{ fov: 60, near: 0.1, far: 100, position: [0, 5, 12] }}
         gl={{
+          powerPreference: isMobile ? 'low-power' : 'high-performance',
+          antialias: !isMobile,
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 0.8,
         }}

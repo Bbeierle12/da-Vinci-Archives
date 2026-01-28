@@ -2,10 +2,30 @@ import { useState, useEffect } from 'react';
 
 /**
  * Loading screen shown while 3D assets initialize
+ * Includes orientation hint for mobile users
  */
 export default function LoadingScreen({ onComplete }) {
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [showOrientationHint, setShowOrientationHint] = useState(false);
+
+  useEffect(() => {
+    // Check if device is mobile and in portrait mode
+    const checkOrientation = () => {
+      const isMobile = window.innerWidth < 768;
+      const isPortrait = window.innerHeight > window.innerWidth;
+      setShowOrientationHint(isMobile && isPortrait);
+    };
+
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
+    };
+  }, []);
 
   useEffect(() => {
     // Simulate loading progress
@@ -33,7 +53,7 @@ export default function LoadingScreen({ onComplete }) {
     <div className={`loading-screen ${progress >= 100 ? 'fade-out' : ''}`}>
       <div className="loading-content">
         <div className="loading-gear">
-          <svg viewBox="0 0 100 100" className="gear-svg">
+          <svg viewBox="0 0 100 100" className="gear-svg" aria-hidden="true">
             <path
               d="M50 10 L55 20 L65 15 L60 25 L70 30 L60 35 L65 45 L55 40 L50 50 L45 40 L35 45 L40 35 L30 30 L40 25 L35 15 L45 20 Z"
               fill="none"
@@ -46,7 +66,13 @@ export default function LoadingScreen({ onComplete }) {
 
         <h2 className="loading-title">Da Vinci Workshop</h2>
 
-        <div className="loading-bar">
+        {showOrientationHint && (
+          <p className="loading-text" style={{ marginBottom: '1rem', color: '#c9a227' }}>
+            📱 For best experience, rotate to landscape mode
+          </p>
+        )}
+
+        <div className="loading-bar" role="progressbar" aria-valuenow={Math.min(100, progress)} aria-valuemin={0} aria-valuemax={100}>
           <div
             className="loading-fill"
             style={{ width: `${Math.min(100, progress)}%` }}

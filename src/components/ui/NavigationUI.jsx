@@ -1,7 +1,7 @@
 import { useWorkshopStore } from '../../stores';
 
 /**
- * Station navigation buttons
+ * Station navigation buttons with touch-optimized interactions
  */
 export default function NavigationUI() {
   const currentStation = useWorkshopStore((s) => s.currentStation);
@@ -23,6 +23,7 @@ export default function NavigationUI() {
           onClick={returnToOverview}
           disabled={isTransitioning}
           className="nav-btn back-btn"
+          aria-label="Return to overview"
         >
           ← Overview
         </button>
@@ -34,8 +35,9 @@ export default function NavigationUI() {
               onClick={() => goToStation(station.id)}
               disabled={isTransitioning}
               className="nav-btn station-btn"
+              aria-label={`Go to ${station.label}`}
             >
-              <span className="station-icon">{station.icon}</span>
+              <span className="station-icon" aria-hidden="true">{station.icon}</span>
               <span className="station-label">{station.label}</span>
             </button>
           ))}
