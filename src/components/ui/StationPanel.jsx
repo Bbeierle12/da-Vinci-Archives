@@ -95,8 +95,9 @@ function GalleryPanel() {
                 onClick={() => setSelected(p.id)}
                 role="button"
                 tabIndex={0}
-                onKeyPress={(e) => {
+                onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
                     setSelected(p.id);
                   }
                 }}
@@ -181,8 +182,9 @@ function InventoryPanel() {
                   onClick={() => setSelected(s.id)}
                   role="button"
                   tabIndex={0}
-                  onKeyPress={(e) => {
+                  onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
                       setSelected(s.id);
                     }
                   }}
@@ -255,8 +257,9 @@ function PlansPanel() {
                 onClick={() => setSelected(p.id)}
                 role="button"
                 tabIndex={0}
-                onKeyPress={(e) => {
+                onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
                     setSelected(p.id);
                   }
                 }}

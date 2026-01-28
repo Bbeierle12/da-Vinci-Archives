@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useDeviceDetection } from '../../hooks';
 
 /**
  * Loading screen shown while 3D assets initialize
@@ -8,11 +9,11 @@ export default function LoadingScreen({ onComplete }) {
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(true);
   const [showOrientationHint, setShowOrientationHint] = useState(false);
+  const { isMobile } = useDeviceDetection();
 
   useEffect(() => {
-    // Check if device is mobile and in portrait mode
+    // Check if device is in portrait mode
     const checkOrientation = () => {
-      const isMobile = window.innerWidth < 768;
       const isPortrait = window.innerHeight > window.innerWidth;
       setShowOrientationHint(isMobile && isPortrait);
     };
@@ -25,7 +26,7 @@ export default function LoadingScreen({ onComplete }) {
       window.removeEventListener('resize', checkOrientation);
       window.removeEventListener('orientationchange', checkOrientation);
     };
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
     // Simulate loading progress
@@ -67,7 +68,7 @@ export default function LoadingScreen({ onComplete }) {
         <h2 className="loading-title">Da Vinci Workshop</h2>
 
         {showOrientationHint && (
-          <p className="loading-text" style={{ marginBottom: '1rem', color: '#c9a227' }}>
+          <p className="loading-text orientation-hint">
             📱 For best experience, rotate to landscape mode
           </p>
         )}

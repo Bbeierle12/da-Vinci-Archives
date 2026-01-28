@@ -479,6 +479,11 @@
   min-height: 1.5em;
 }
 
+.orientation-hint {
+  margin-bottom: 1rem;
+  color: #c9a227;
+}
+
 /* Transition Overlay */
 .transition-overlay {
   position: fixed;
@@ -705,6 +710,13 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  /* Disable slide animation for reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .station-panel {
+      animation: none;
     }
   }
 
